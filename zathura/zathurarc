@@ -1,0 +1,17 @@
+
+set selection-clipboard clipboard
+set guioptions ""
+
+set recolor true
+set recolor-keephue true          
+set recolor-reverse-video false
+
+set recolor-lightcolor "#1f1f1f" 
+set recolor-darkcolor  "#dcdccc"
+
+set default-bg "#1f1f1f"
+set default-fg "#dcdccc"
+set statusbar-bg "#1f1f1f"
+set statusbar-fg "#dcdccc"
+set inputbar-bg "#1f1f1f"
+set inputbar-fg "#dcdccc"

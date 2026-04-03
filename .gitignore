@@ -1,0 +1,8 @@
+# Ignore symlinks created by stow
+*/
+
+# But still track the package folders
+!nvim/
+!tmux/
+!zathura/
+!*/
