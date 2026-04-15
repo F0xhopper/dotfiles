@@ -3,6 +3,9 @@ return {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
     opts = {
+      filetypes = {
+        markdown = false,
+      },
       suggestion = {
         enabled = true,
         auto_trigger = true,
