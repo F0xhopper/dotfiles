@@ -19,6 +19,7 @@ return {
         hl.BlinkCmpLabel = { fg = c.fg_dark or "#a0a0a0" }
         hl.BlinkCmpLabelMatch = { fg = c.fg or "#c0c0c0", bold = true }
         hl.BlinkCmpKind = { fg = c.fg_dark or "#a0a0a0" }
+        hl.CopilotSuggestion = { fg = c.fg_dark or "#555555", italic = true }
       end,
     },
   },
