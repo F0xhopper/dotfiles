@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# =============================================
+# Smart tmux dev session creator
+# Usage: Run `dev` from inside any project directory
+# =============================================
+
+SESSION_NAME=$(basename "$(pwd)")
+PROJECT_DIR="$(pwd)"
+
+# Check if session already exists
+if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+    echo "✅ Session '$SESSION_NAME' already exists. Attaching..."
+    tmux attach-session -t "$SESSION_NAME"
+    exit 0
+fi
+
+echo "🚀 Creating new tmux session: $SESSION_NAME"
+echo "📂 Project directory: $PROJECT_DIR"
+
+# Create new session + first window (dev)
+tmux new-session -d -s "$SESSION_NAME" -c "$PROJECT_DIR" -n "dev"
+
+# Split horizontally: Left = nvim, Right = Claude
+tmux split-window -h -c "$PROJECT_DIR"
+
+# Left pane (0): nvim with project
+tmux send-keys -t "$SESSION_NAME:dev.0" "nvim ." C-m
+
+# Right pane (1): Claude
+tmux send-keys -t "$SESSION_NAME:dev.1" "claude" C-m
+
+# Second window: Server (empty, ready for you to run server manually)
+tmux new-window -t "$SESSION_NAME" -n "server" -c "$PROJECT_DIR"
+
+# Optional third window for logs, git, etc.
+tmux new-window -t "$SESSION_NAME" -n "logs" -c "$PROJECT_DIR"
+
+# Final layout
+tmux select-window -t "$SESSION_NAME:dev"
+tmux select-pane -t "$SESSION_NAME:dev.0"
+tmux resize-pane -t "$SESSION_NAME:dev.0" -x 65   # Left pane wider
+
+echo "✅ Session '$SESSION_NAME' created!"
+echo "→ nvim on left | Claude on right | Server window ready"
+tmux attach-session -t "$SESSION_NAME"
