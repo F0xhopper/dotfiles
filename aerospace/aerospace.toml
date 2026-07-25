@@ -17,6 +17,12 @@ auto-reload-config = true
 # or you'll get two processes.
 after-startup-command = [
     'exec-and-forget borders',
+    'exec-and-forget sketchybar',
+]
+
+# Poke sketchybar so it can highlight the newly focused workspace.
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
 
 # ---------------------------------------------------------------------------
@@ -53,9 +59,7 @@ gaps.inner.vertical   = 3
 gaps.outer.left       = 3
 gaps.outer.right      = 3
 gaps.outer.bottom     = 3
-gaps.outer.top        = 3
-# If you run Sketchybar, bump the top gap instead:
-# gaps.outer.top = 40
+gaps.outer.top        = 36
 
 # ---------------------------------------------------------------------------
 # Window rules — put apps where they belong, float the things that shouldn't tile.

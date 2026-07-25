@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# ~/.config/sketchybar/sketchybarrc
+# Minimal transparent bar: apple · workspaces | wifi · battery · clock
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+FONT="JetBrainsMono Nerd Font"
+WHITE=0xffffffff
+GREY=0xff8a8a8e
+TRANSPARENT=0x00000000
+
+# ---------------------------------------------------------------- bar
+sketchybar --bar \
+    height=32 \
+    position=top \
+    padding_left=10 \
+    padding_right=10 \
+    color=$TRANSPARENT \
+    border_width=0 \
+    shadow=off \
+    topmost=off \
+    sticky=on
+
+# ---------------------------------------------------------------- defaults
+sketchybar --default \
+    icon.font="$FONT:Bold:15.0" \
+    icon.color=$WHITE \
+    label.font="$FONT:Semibold:13.0" \
+    label.color=$WHITE \
+    padding_left=3 \
+    padding_right=3 \
+    icon.padding_left=5 \
+    icon.padding_right=5 \
+    label.padding_left=5 \
+    label.padding_right=5 \
+    background.drawing=off
+
+# ---------------------------------------------------------------- apple logo
+sketchybar --add item apple left \
+           --set apple \
+                 icon="" \
+                 icon.font="$FONT:Bold:16.0" \
+                 label.drawing=off \
+                 click_script="open -a 'System Settings'"
+
+# ---------------------------------------------------------------- workspaces
+sketchybar --add event aerospace_workspace_change
+
+for sid in $(aerospace list-workspaces --all); do
+    sketchybar --add item space.$sid left \
+               --subscribe space.$sid aerospace_workspace_change \
+               --set space.$sid \
+                     icon.drawing=off \
+                     label="$sid" \
+                     label.color=$GREY \
+                     background.color=0x22ffffff \
+                     background.corner_radius=6 \
+                     background.height=22 \
+                     background.drawing=off \
+                     click_script="aerospace workspace $sid" \
+                     script="$PLUGIN_DIR/aerospace.sh $sid"
+done
+
+# ------------------------------------------------- right side
+# Items added to 'right' stack right-to-left, so clock (added first) sits furthest right.
+
+sketchybar --add item clock right \
+           --set clock \
+                 update_freq=15 \
+                 icon.drawing=off \
+                 script="$PLUGIN_DIR/clock.sh"
+
+sketchybar --add item battery right \
+           --set battery \
+                 update_freq=120 \
+                 script="$PLUGIN_DIR/battery.sh" \
+           --subscribe battery power_source_change system_woke
+
+sketchybar --add item wifi right \
+           --set wifi \
+                 update_freq=30 \
+                 label.drawing=off \
+                 script="$PLUGIN_DIR/wifi.sh" \
+           --subscribe wifi wifi_change
+
+# ---------------------------------------------------------------- go
+sketchybar --update
