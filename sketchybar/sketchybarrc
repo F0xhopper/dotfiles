@@ -38,8 +38,8 @@ sketchybar --default \
 # ---------------------------------------------------------------- apple logo
 sketchybar --add item apple left \
            --set apple \
-                 icon="" \
-                 icon.font="$FONT:Bold:16.0" \
+                 icon="" \
+                 icon.font="Helvetica Neue:Bold:16.0" \
                  label.drawing=off \
                  click_script="open -a 'System Settings'"
 
