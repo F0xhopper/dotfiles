@@ -59,7 +59,7 @@ gaps.inner.vertical   = 3
 gaps.outer.left       = 3
 gaps.outer.right      = 3
 gaps.outer.bottom     = 3
-gaps.outer.top        = 36
+gaps.outer.top        = 3
 
 # ---------------------------------------------------------------------------
 # Window rules — put apps where they belong, float the things that shouldn't tile.
@@ -67,26 +67,29 @@ gaps.outer.top        = 36
 # ---------------------------------------------------------------------------
 on-window-detected = [
     # 1 = terminal (nvim + tmux live here)
-    { if = 'test %{app-bundle-id} = com.mitchellh.ghostty',   run = 'move-node-to-workspace 1' },
-    { if = 'test %{app-bundle-id} = com.github.wez.wezterm',  run = 'move-node-to-workspace 1' },
-    { if = 'test %{app-bundle-id} = net.kovidgoyal.kitty',    run = 'move-node-to-workspace 1' },
-    { if = 'test %{app-bundle-id} = org.alacritty',           run = 'move-node-to-workspace 1' },
+    # during-aerospace-startup limits these to sorting windows that already
+    # existed when AeroSpace launched. Windows opened afterward (dock,
+    # spotlight, alt-b, alt-t, ...) stay on whatever workspace you're on.
+    { if = { app-id = 'com.mitchellh.ghostty',   during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
+    { if = { app-id = 'com.github.wez.wezterm',  during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
+    { if = { app-id = 'net.kovidgoyal.kitty',    during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
+    { if = { app-id = 'org.alacritty',           during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
 
     # 2 = browser
-    { if = 'test %{app-bundle-id} = com.google.Chrome',       run = 'move-node-to-workspace 2' },
-    { if = 'test %{app-bundle-id} = org.mozilla.firefox',     run = 'move-node-to-workspace 2' },
-    { if = 'test %{app-bundle-id} = com.apple.Safari',        run = 'move-node-to-workspace 2' },
-    { if = 'test %{app-bundle-id} = company.thebrowser.Browser', run = 'move-node-to-workspace 2' },
+    { if = { app-id = 'com.google.Chrome',           during-aerospace-startup = true }, run = 'move-node-to-workspace 2' },
+    { if = { app-id = 'org.mozilla.firefox',         during-aerospace-startup = true }, run = 'move-node-to-workspace 2' },
+    { if = { app-id = 'com.apple.Safari',            during-aerospace-startup = true }, run = 'move-node-to-workspace 2' },
+    { if = { app-id = 'company.thebrowser.Browser',  during-aerospace-startup = true }, run = 'move-node-to-workspace 2' },
 
     # 4 = comms
-    { if = 'test %{app-bundle-id} = com.tinyspeck.slackmacgap', run = 'move-node-to-workspace 4' },
-    { if = 'test %{app-bundle-id} = com.hnc.Discord',           run = 'move-node-to-workspace 4' },
+    { if = { app-id = 'com.tinyspeck.slackmacgap', during-aerospace-startup = true }, run = 'move-node-to-workspace 4' },
+    { if = { app-id = 'com.hnc.Discord',           during-aerospace-startup = true }, run = 'move-node-to-workspace 4' },
 
-    # Always float these
-    { if = 'test %{app-bundle-id} = com.apple.systempreferences', run = 'layout floating' },
-    { if = 'test %{app-bundle-id} = com.apple.finder',            run = 'layout floating' },
-    { if = 'test %{app-bundle-id} = com.apple.ActivityMonitor',   run = 'layout floating' },
-    { if = 'test %{app-bundle-id} = com.apple.calculator',        run = 'layout floating' },
+    # Always float these (not startup-gated: applies to every window, always)
+    { if = { app-id = 'com.apple.systempreferences' }, run = 'layout floating' },
+    { if = { app-id = 'com.apple.finder' },            run = 'layout floating' },
+    { if = { app-id = 'com.apple.ActivityMonitor' },   run = 'layout floating' },
+    { if = { app-id = 'com.apple.calculator' },        run = 'layout floating' },
 ]
 
 # ---------------------------------------------------------------------------
@@ -97,6 +100,8 @@ on-window-detected = [
     # --- Launch ---
     # Change Ghostty to whatever you use: wezterm, kitty, Alacritty, iTerm.
     alt-enter = 'exec-and-forget open -na Ghostty'
+    alt-t = 'exec-and-forget open -na Ghostty'                                      # new terminal instance
+    alt-b = 'exec-and-forget open -na "Google Chrome" --args --new-window'          # new browser window
 
     # --- Focus (vim keys) ---
     alt-h = 'focus left'

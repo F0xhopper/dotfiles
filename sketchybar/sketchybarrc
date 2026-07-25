@@ -41,7 +41,37 @@ sketchybar --add item apple left \
                  icon="" \
                  icon.font="Helvetica Neue:Bold:16.0" \
                  label.drawing=off \
-                 click_script="open -a 'System Settings'"
+                 popup.align=left \
+                 popup.y_offset=5 \
+                 popup.background.color=0xf01e1e1e \
+                 popup.background.corner_radius=6 \
+                 popup.background.border_width=1 \
+                 popup.background.border_color=0xff444444 \
+                 click_script="sketchybar --set apple popup.drawing=toggle"
+
+sketchybar --add item apple.settings popup.apple \
+           --set apple.settings \
+                 icon.drawing=off \
+                 label="System Settings…" \
+                 label.padding_left=10 \
+                 label.padding_right=10 \
+                 click_script="sketchybar --set apple popup.drawing=off; open -a 'System Settings'"
+
+sketchybar --add item apple.sleep popup.apple \
+           --set apple.sleep \
+                 icon.drawing=off \
+                 label="Sleep" \
+                 label.padding_left=10 \
+                 label.padding_right=10 \
+                 click_script="sketchybar --set apple popup.drawing=off; osascript -e 'tell application \"System Events\" to sleep'"
+
+sketchybar --add item apple.shutdown popup.apple \
+           --set apple.shutdown \
+                 icon.drawing=off \
+                 label="Shut Down…" \
+                 label.padding_left=10 \
+                 label.padding_right=10 \
+                 click_script="sketchybar --set apple popup.drawing=off; osascript -e 'tell application \"System Events\" to shut down'"
 
 # ---------------------------------------------------------------- workspaces
 sketchybar --add event aerospace_workspace_change
