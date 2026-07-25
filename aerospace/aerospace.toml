@@ -18,6 +18,8 @@ auto-reload-config = true
 after-startup-command = [
     'exec-and-forget borders',
     'exec-and-forget sketchybar',
+    'exec-and-forget sketchybar --reload',
+
 ]
 
 # Poke sketchybar so it can highlight the newly focused workspace.
