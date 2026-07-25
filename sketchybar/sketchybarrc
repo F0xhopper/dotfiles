@@ -83,5 +83,15 @@ sketchybar --add item wifi right \
                  script="$PLUGIN_DIR/wifi.sh" \
            --subscribe wifi wifi_change
 
+# No native "bluetooth changed" event, so this just polls. Hidden (drawing=off)
+# when nothing named AirPods is connected.
+sketchybar --add item airpods right \
+           --set airpods \
+                 update_freq=10 \
+                 label.drawing=off \
+                 drawing=off \
+                 script="$PLUGIN_DIR/airpods.sh" \
+           --subscribe airpods system_woke
+
 # ---------------------------------------------------------------- go
 sketchybar --update
