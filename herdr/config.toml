@@ -1,0 +1,139 @@
+# Herdr configuration.
+# Everything not set here falls back to Herdr's defaults (prefix = ctrl+b).
+# Print the full annotated defaults with:  herdr --default-config
+# Apply changes to a running server with:  herdr server reload-config
+
+[theme]
+# Matches kanso.nvim (theme = "zen"), the Neovim colourscheme.
+# "terminal" inherits the host terminal's palette, so setting Ghostty to its
+# built-in "Kanso Zen" theme makes shell, Herdr, and Neovim agree from one
+# source. The overrides below pin Herdr's own chrome regardless.
+name = "terminal"
+
+[theme.custom]
+# Herdr accepts exactly these seven tokens; anything else is silently ignored
+# with "unknown config key" in `herdr server reload-config` diagnostics.
+# Values are kanso-zen's palette (extras/ghostty/kanso-zen in the plugin).
+panel_bg = "reset"      # transparent, matching kanso's transparent = true
+text = "#c5c9c7"        # kanso fg
+accent = "#7fb4ca"      # bright blue: highlights, borders, navigation UI
+red = "#e46876"         # bright variants for the three agent-state colours,
+green = "#87a987"       # which need to stay legible at a glance in the
+yellow = "#e6c384"      # sidebar rather than blend into the muted palette
+blue = "#8ba4b0"
+
+[keys]
+# Prefix, overriding Herdr's ctrl+b default.
+# Note: Herdr has no send-prefix action, so ctrl+a can no longer reach the
+# shell (zsh is in emacs mode here, where it means beginning-of-line).
+# Use Home, or ctrl+e then ctrl+x ctrl+e, if you need that back.
+prefix = "ctrl+a"
+
+# Jump straight to agent panes from any tab, without caring where the agent
+# lives. Unset by default. Deliberately avoids alt+, which needs
+# `macos-option-as-alt = true` in Ghostty to register at all.
+next_agent = "prefix+a"
+previous_agent = "prefix+shift+a"
+
+# Direct jump to a workspace by number, rather than cycling the picker.
+# Unset by default; the indexed form is what Herdr's own docs suggest.
+switch_workspace = "prefix+shift+1..9"
+
+# --- vim-style motion -------------------------------------------------------
+# Pane focus. These four are already Herdr's defaults; pinned here so the vim
+# layout is stated rather than inherited, and so it survives a defaults change.
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+# Workspaces are a vertical list in the sidebar, so shift+j/k walks those,
+# agreeing with the arrow keys navigate mode already uses.
+previous_workspace = "prefix+shift+k"
+next_workspace = "prefix+shift+j"
+
+# Tabs stay on Herdr's defaults rather than the shift+h/l that the h/j/k/l
+# grammar above would suggest. Pinned rather than inherited, like the pane
+# focus keys.
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+
+# Jump back to the previously focused pane, mirroring vim's ctrl+w p. Unset by
+# default; on prefix+tab because prefix+p is previous_tab again.
+last_pane = "prefix+tab"
+
+# Navigate mode's own movement keys, independent of focus_pane_* above. Also
+# Herdr's defaults, pinned for the same reason.
+navigate_pane_left = "h"
+navigate_pane_down = "j"
+navigate_pane_up = "k"
+navigate_pane_right = "l"
+
+# Splits on vim's letters, replacing Herdr's prefix+v / prefix+minus defaults.
+#
+# The mapping below looks crossed, and has to be. Vim names a split after the
+# divider it draws: :vsplit draws a vertical line, so the panes end up side by
+# side. Herdr names a split after the axis the panes sit on, which is tmux's
+# convention: side-by-side panes are a "horizontal" split. Same layout, opposite
+# word, so vim's v belongs on Herdr's split_horizontal. Confirmed against a
+# running server rather than read off the key names, which suggest the reverse.
+split_horizontal = "prefix+v"   # left/right, vim's ctrl+w v
+split_vertical = "prefix+s"     # top/bottom, vim's ctrl+w s
+
+# Displaced by split_vertical above. prefix+minus is now unbound.
+settings = "prefix+shift+s"
+
+# Left at Herdr's defaults: prefix+z zooms (vim's ctrl+w _) and prefix+r opens
+# resize mode, where h/j/k/l resize.
+
+# --- vim-herdr-navigation ---------------------------------------------------
+# github.com/paulbkim-dev/vim-herdr-navigation — vim-tmux-navigator for Herdr.
+# Direct chords, no prefix: ctrl+h/j/k/l crosses pane borders from anywhere.
+# In a pane running vim/neovim the action forwards the chord to the editor so
+# it moves between splits, and hands back to Herdr at a split edge.
+#
+# Tradeoff, the same one vim-tmux-navigator makes: these chords no longer reach
+# a non-vim pane's shell, so zsh loses ctrl+l (clear), ctrl+k (kill-line) and
+# ctrl+j (accept-line) here, on top of the ctrl+a noted above. Switch these to
+# alt+h/j/k/l if that bites.
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "vim-herdr-navigation.left"
+description = "navigate left (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "vim-herdr-navigation.down"
+description = "navigate down (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "vim-herdr-navigation.up"
+description = "navigate up (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "vim-herdr-navigation.right"
+description = "navigate right (vim/herdr)"
+
+[ui]
+# Sidebar as an attention queue rather than grouped by workspace: whichever
+# agent is blocked floats to the top. Default is "spaces". This is the single
+# biggest change when running more than two or three agents.
+agent_panel_sort = "priority"
+
+# Label each pane border with the agent running in it, so a screen of panes
+# is readable without focusing them one at a time.
+show_agent_labels_on_pane_borders = true
+
+[ui.toast]
+# Desktop notification when an agent in a background workspace needs input.
+# Default is "off", which means a blocked agent in a workspace you are not
+# looking at waits silently until you happen to check.
+# Use "terminal" instead if Ghostty's own notifications are preferred, or
+# "herdr" to keep alerts inside the TUI.
+delivery = "system"
