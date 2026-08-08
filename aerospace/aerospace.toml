@@ -94,6 +94,11 @@ on-window-detected = [
     { if = { app-id = 'com.apple.calculator' },        run = 'layout floating' },
 ]
 
+# Pin workspace 1 to the ultrawide when it's connected; falls back to the
+# built-in display automatically when it's not (e.g. on the go).
+[workspace-to-monitor-force-assignment]
+    1 = ['LG ULTRAWIDE', 'built-in']
+
 # ---------------------------------------------------------------------------
 # Keybindings. Modifier is alt (= the Option key).
 # ---------------------------------------------------------------------------
