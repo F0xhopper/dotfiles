@@ -230,12 +230,9 @@ agent_panel_sort = "priority"
 show_agent_labels_on_pane_borders = true
 
 [ui.toast]
-# Kept inside the TUI. Desktop notifications for blocked/done agents come from
-# yankewei/herdr-focus-notify instead, which can be clicked through to the
-# pane; "system" here would show every alert twice. usagebar's rate-limit
-# warnings arrive through this channel too.
-delivery = "herdr"
-
-[ui.toast.herdr]
-position = "bottom-left"
+# Off: no in-TUI pop-ups at all, from Herdr or from plugins (usagebar's
+# rate-limit warnings, radar's notices). Desktop notifications for blocked/done
+# agents come from yankewei/herdr-focus-notify instead, which can be clicked
+# through to the pane; "system" here would show every alert twice.
+delivery = "off"
 
