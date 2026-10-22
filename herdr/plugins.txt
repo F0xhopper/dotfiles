@@ -1,0 +1,20 @@
+# Herdr plugins, pinned to the commit that is known to work here.
+# Read by install.sh. One plugin per line: <owner/repo> <commit>  # note
+#
+# Updating is deliberate: `herdr plugin update <plugin_id>` (Herdr 0.9.4+),
+# check it still behaves, then `install.sh --freeze` to rewrite the commits
+# below from what is now installed, and commit.
+#
+# Build-time needs: node (radar, worktree-setup), cargo (focus-notify),
+# alerter (focus-notify, installed by install.sh).
+
+paulbkim-dev/vim-herdr-navigation  820d48f5d9c9a7dece6a4bebfa3982ec30bbfbb7  # ctrl+h/j/k/l across herdr panes and nvim splits
+hhdebb/herdr-radar                 3e72fe2c22a30c983fc68f11144a94a9ae442f17  # owns the sidebar: grouping, held done/blocked marks
+jeffarese/herdr-bar                261de9b0441a6972941414bbf16eb4f5df27ac34  # prefix+space fuzzy jump
+qu8n/herdr-automatic-rename        f4f1b90827a2e9b4757d2df9673590ddbfa8a4b5  # tab names from process / agent task
+senna-lang/herdr-agent-usage       e23335783332affee95307bdd75b21a4f62736e1  # prefix+u limits pane, low-allowance toasts
+yankewei/herdr-focus-notify        ad597302ee5680aa6eb9fd7de400e60652d5b9cb  # clickable macOS notifications for blocked/done
+persiyanov/herdr-reviewr           a253b1bfe4b34182af3204b7fcc42ccfed1b87d9  # prefix+d review agent diffs
+ChmaraX/herdr-gitview              e8e7d3a63606ea109e9618b4ba9e9a1b57d7efe2  # prefix+shift+g / prefix+ctrl+g git view
+ChmaraX/herdr-nvim                 3ca867153baad10d658f731ad8dcdd1d4a1fc1c2  # prefix+i nvim sidebar, prefix+f file picker
+tdi/herdr-worktree-setup           c13ef573452b211b6097ddd0ce197be88e9a4b53  # .env copy + pnpm install in new worktrees

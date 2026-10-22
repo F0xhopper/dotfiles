@@ -2,6 +2,11 @@
 # Everything not set here falls back to Herdr's defaults (prefix = ctrl+b).
 # Print the full annotated defaults with:  herdr --default-config
 # Apply changes to a running server with:  herdr server reload-config
+# Validate before reloading with:          herdr config check
+
+# Skip the first-run wizard that 0.9 added. It also rewrites [theme] (it once
+# swapped "terminal" for "catppuccin" here), so keep it off.
+onboarding = false
 
 [theme]
 # Matches kanso.nvim (theme = "zen"), the Neovim colourscheme.
@@ -9,6 +14,9 @@
 # built-in "Kanso Zen" theme makes shell, Herdr, and Neovim agree from one
 # source. The overrides below pin Herdr's own chrome regardless.
 name = "terminal"
+# No light/dark flipping: Kanso Zen is dark-only. herdr-radar's
+# follow_appearance is off for the same reason (see its plugin config).
+auto_switch = false
 
 [theme.custom]
 # Herdr accepts exactly these seven tokens; anything else is silently ignored
@@ -83,6 +91,10 @@ split_vertical = "prefix+s"     # top/bottom, vim's ctrl+w s
 # Displaced by split_vertical above. prefix+minus is now unbound.
 settings = "prefix+shift+s"
 
+# Displaced from prefix+shift+g, which now opens chmarax.gitview (below).
+# c for "create", next to prefix+c's new_tab.
+new_worktree = "prefix+shift+c"
+
 # Left at Herdr's defaults: prefix+z zooms (vim's ctrl+w _) and prefix+r opens
 # resize mode, where h/j/k/l resize.
 
@@ -120,7 +132,94 @@ type = "plugin_action"
 command = "vim-herdr-navigation.right"
 description = "navigate right (vim/herdr)"
 
+# --- plugin keys ------------------------------------------------------------
+# Herdr never binds plugin actions itself. Each plugin's suggested key is
+# noted where it was moved because it collided with something above.
+# Anything left unbound here is still reachable from herdr-bar (prefix+space)
+# or `herdr plugin action list`.
+
+# jeffarese/herdr-bar: fuzzy jump to any agent, tab, pane, workspace, repo or
+# branch. Suggested prefix+k, which is focus_pane_up.
+[[keys.command]]
+key = "prefix+space"
+type = "plugin_action"
+command = "herdr-bar.open"
+description = "command bar (fuzzy jump)"
+
+# ChmaraX/herdr-gitview: changed files + diff. Suggested cmd+shift+g / cmd+g,
+# which Ghostty keeps for itself.
+[[keys.command]]
+key = "prefix+shift+g"
+type = "plugin_action"
+command = "chmarax.gitview.toggle"
+description = "git view sidebar"
+
+[[keys.command]]
+key = "prefix+ctrl+g"
+type = "plugin_action"
+command = "chmarax.gitview.toggle-tab"
+description = "git view tab"
+
+# ChmaraX/herdr-nvim: nvim sidebar with agent annotations. Suggested prefix+e
+# (edit_scrollback) and prefix+o (open_notification_target).
+[[keys.command]]
+key = "prefix+i"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.toggle"
+description = "nvim sidebar"
+
+[[keys.command]]
+key = "prefix+f"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.pick-file"
+description = "open file from agent output"
+
+# persiyanov/herdr-reviewr: review agent diffs, line comments go back to the
+# agent. Suggested cmd+r; d for "diff".
+[[keys.command]]
+key = "prefix+d"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"
+description = "review agent diff"
+
+# hhdebb/herdr-radar: the flip between active (grouped) and recent (flat)
+# order. Suggested prefix+a, which stays next_agent; period sits beside the
+# comma that opens radar's settings.
+[[keys.command]]
+key = "prefix+period"
+type = "plugin_action"
+command = "hhdebb.herdr-radar.view-flip"
+description = "radar: active <-> recent"
+
+[[keys.command]]
+key = "prefix+comma"
+type = "plugin_action"
+command = "hhdebb.herdr-radar.settings"
+description = "radar settings"
+
+# senna-lang/herdr-agent-usage: 5h / 7d limit windows. Suggested
+# ctrl+shift+u / ctrl+shift+m, moved under the prefix like everything else.
+[[keys.command]]
+key = "prefix+u"
+type = "plugin_action"
+command = "usagebar.open-limits"
+description = "agent usage: limits pane"
+
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "usagebar.refresh"
+description = "agent usage: refresh meters"
+
 [ui]
+# herdr-radar writes its tab-bar and sidebar blocks (fenced ">>> herdr-radar")
+# into this table on start. They are stripped from commits by the filter in
+# ../.gitattributes, so a fresh clone gets them when radar first runs.
+
+# Tabs are named by qu8n/herdr-automatic-rename, so skip the name prompt.
+prompt_new_tab_name = false
+
+
 # Sidebar as an attention queue rather than grouped by workspace: whichever
 # agent is blocked floats to the top. Default is "spaces". This is the single
 # biggest change when running more than two or three agents.
@@ -131,9 +230,12 @@ agent_panel_sort = "priority"
 show_agent_labels_on_pane_borders = true
 
 [ui.toast]
-# Desktop notification when an agent in a background workspace needs input.
-# Default is "off", which means a blocked agent in a workspace you are not
-# looking at waits silently until you happen to check.
-# Use "terminal" instead if Ghostty's own notifications are preferred, or
-# "herdr" to keep alerts inside the TUI.
-delivery = "system"
+# Kept inside the TUI. Desktop notifications for blocked/done agents come from
+# yankewei/herdr-focus-notify instead, which can be clicked through to the
+# pane; "system" here would show every alert twice. usagebar's rate-limit
+# warnings arrive through this channel too.
+delivery = "herdr"
+
+[ui.toast.herdr]
+position = "bottom-left"
+

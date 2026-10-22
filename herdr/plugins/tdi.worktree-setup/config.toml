@@ -1,0 +1,8 @@
+# Runs in every worktree Herdr creates (prefix+shift+c), not ones made with
+# plain `git worktree add`. cwd is the new worktree; steps stop at the first
+# failure, so optional ones end in `|| true`. Log: $HERDR_PLUGIN_STATE_DIR.
+[default]
+steps = [
+  'cp "$HERDR_MAIN_REPO"/.env* . 2>/dev/null || true',
+  'if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; fi',
+]

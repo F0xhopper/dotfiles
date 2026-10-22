@@ -1,0 +1,4 @@
+# herdr-radar regenerates its fenced blocks in config.toml on every start, so
+# the committed copy leaves them out. The filter is defined per clone by
+# herdr/install.sh; without it git simply commits the whole file.
+herdr/config.toml filter=herdr-radar

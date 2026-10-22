@@ -1,0 +1,8 @@
+# herdr-radar settings. Read at daemon start: after editing, run
+#   herdr plugin action invoke hhdebb.herdr-radar.state-stop
+#   herdr plugin action invoke hhdebb.herdr-radar.state-start
+# or change them from the popup (prefix+comma), which restarts it for you.
+
+# Leave Herdr's theme alone. On by default, it flips Herdr between light and
+# dark with macOS, which fights theme.name = "terminal" + Kanso Zen.
+follow_appearance = false
