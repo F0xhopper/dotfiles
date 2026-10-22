@@ -1,0 +1,23 @@
+#!/bin/sh
+# Open a new Ghostty *window* rather than a new Ghostty *instance*.
+#
+# `open -na Ghostty` launches a second copy of the app bundle. macOS gives every
+# instance its own Dock tile, and Ghostty's default quit-after-last-window-closed
+# = false keeps a windowless instance alive indefinitely, so the tiles pile up.
+#
+# Ghostty has a `+new-window` CLI action, but it is GTK/D-Bus only and reports
+# "not supported on this platform" on macOS (checked against 1.3.1), so the
+# window has to be requested through the UI. cmd+n is Ghostty's own new-window
+# binding; System Events needs Accessibility permission for whatever process
+# invokes this (AeroSpace, when called from a keybinding).
+#
+# If Ghostty is not running, `activate` launches it and initial-window = true
+# already yields a window, so the keystroke is skipped to avoid a second one.
+
+if pgrep -qx ghostty; then
+    osascript \
+        -e 'tell application "Ghostty" to activate' \
+        -e 'tell application "System Events" to keystroke "n" using command down'
+else
+    osascript -e 'tell application "Ghostty" to activate'
+fi

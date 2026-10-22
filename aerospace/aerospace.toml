@@ -106,8 +106,15 @@ on-window-detected = [
 
     # --- Launch ---
     # Change Ghostty to whatever you use: wezterm, kitty, Alacritty, iTerm.
-    alt-enter = 'exec-and-forget open -na Ghostty'
-    alt-t = 'exec-and-forget open -na Ghostty'                                      # new terminal instance
+    #
+    # These deliberately do not use `open -na Ghostty`. The -n flag launches a
+    # separate instance of the app bundle each time; macOS gives every instance
+    # its own Dock tile, and Ghostty keeps a windowless instance alive by
+    # default, so the tiles accumulate and never clear. The helper below asks
+    # the single running instance for another window instead. See the script
+    # for why this goes through AppleScript rather than `ghostty +new-window`.
+    alt-enter = 'exec-and-forget /Users/edenfoxphillips/Projects/dotfiles/bin/ghostty-new-window'
+    alt-t = 'exec-and-forget /Users/edenfoxphillips/Projects/dotfiles/bin/ghostty-new-window'   # new terminal window
     alt-b = 'exec-and-forget open -na "Google Chrome" --args --new-window'          # new browser window
 
     # --- Focus (vim keys) ---
