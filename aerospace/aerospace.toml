@@ -73,6 +73,7 @@ on-window-detected = [
     # existed when AeroSpace launched. Windows opened afterward (dock,
     # spotlight, alt-b, alt-t, ...) stay on whatever workspace you're on.
     { if = { app-id = 'com.mitchellh.ghostty',   during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
+    { if = { app-id = 'dev.herdr.app',           during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
     { if = { app-id = 'com.github.wez.wezterm',  during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
     { if = { app-id = 'net.kovidgoyal.kitty',    during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },
     { if = { app-id = 'org.alacritty',           during-aerospace-startup = true }, run = 'move-node-to-workspace 1' },

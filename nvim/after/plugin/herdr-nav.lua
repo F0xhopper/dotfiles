@@ -11,7 +11,8 @@
 -- It lives in after/plugin so it loads last and wins over the <C-h/j/k/l> maps
 -- in lua/plugins/tmux.lua; vim-tmux-navigator still loads on its TmuxNavigate*
 -- commands, which is the fallback path below when running under tmux.
--- Re-copy this file after upgrading the herdr plugin.
+-- Re-copy this file after upgrading the herdr plugin, keeping the Herdr app
+-- branch (HC_TERMINAL_ID) below, which is a local addition.
 
 local function nav(wincmd, dir)
   local prev = vim.api.nvim_get_current_win()
@@ -28,6 +29,11 @@ local function nav(wincmd, dir)
     -- Target this pane explicitly: `--current` resolves to the server's
     -- globally focused pane, which is not necessarily the one we are in.
     vim.fn.system({ herdr, "pane", "focus", "--direction", dir, "--pane", vim.env.HERDR_PANE_ID })
+  elseif vim.env.HC_TERMINAL_ID and vim.env.HC_TERMINAL_ID ~= "" then
+    -- Local addition (not in the plugin's nvim.lua; keep it when re-copying):
+    -- inside the Herdr app, whose `nav` mod (~/.config/herdr-app/mods/nav)
+    -- forwards ctrl+h/j/k/l here while Neovim has focus.
+    vim.fn.system({ "herdr-app", "do", "pane.go", "--direction", dir })
   elseif vim.env.TMUX and vim.env.TMUX ~= "" then
     local tmux = { left = "Left", down = "Down", up = "Up", right = "Right" }
     pcall(vim.cmd, "TmuxNavigate" .. tmux[dir])
